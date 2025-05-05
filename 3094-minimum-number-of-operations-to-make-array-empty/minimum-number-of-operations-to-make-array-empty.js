@@ -17,10 +17,6 @@ function minOperations(nums) {
   let impossible = false;
 
   numberCounts.forEach((count, num) => {
-    console.log(
-      `The number "${num}" is represented ${count} times in the given array`
-    );
-
     if (count < 2) {
       impossible = -1;
     }
@@ -28,7 +24,6 @@ function minOperations(nums) {
     res += numOfOps;
   });
 
-  console.log(impossible ? -1 : res);
   return impossible ? -1 : res;
 }
 
