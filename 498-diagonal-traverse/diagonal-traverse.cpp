@@ -1,42 +1,27 @@
 class Solution {
 public:
     vector<int> findDiagonalOrder(vector<vector<int>>& mat) {
-       int m = (int)mat.size();
-        if (m == 0) return {};
-        int n = (int)mat[0].size();
+       if (mat.empty() || mat[0].empty()) return {};
+        int m = (int)mat.size(), n = (int)mat[0].size();
+        vector<vector<int>> diags(m + n - 1);
+
+        for (int i = 0; i < m; ++i) {
+            const auto& row = mat[i];
+            for (int j = 0; j < n; ++j) {
+                diags[i + j].push_back(row[j]);
+            }
+        }
 
         vector<int> res;
-        res.reserve((size_t)m * n);
-
-        // pos[i] == next column to consume from row i
-        vector<int> pos(m, 0);
-        bool direction = true; // reverse the collected diagonal when true
-
-        while (true) {
-            vector<pair<int,int>> items;
-            items.reserve(min(m, n));
-
-            for (int i = 0; i < m; ++i) {
-                int v = pos[i];
-                if (v == n) continue;           // row exhausted
-                items.emplace_back(i, v);
-                ++pos[i];
-                if (v == 0) break;              // match your Python break
-            }
-
-            if (items.empty()) break;
-
-            if (direction) {
-                for (int k = (int)items.size() - 1; k >= 0; --k) {
-                    auto [r, c] = items[k];
-                    res.push_back(mat[r][c]);
-                }
+        res.reserve(m * n);
+        for (int k = 0; k < (int)diags.size(); ++k) {
+            const auto& d = diags[k];
+            if ((k & 1) == 0) {
+                // even diagonal: reverse order
+                for (int t = (int)d.size() - 1; t >= 0; --t) res.push_back(d[t]);
             } else {
-                for (auto [r, c] : items) {
-                    res.push_back(mat[r][c]);
-                }
+                for (int t = 0; t < (int)d.size(); ++t) res.push_back(d[t]);
             }
-            direction = !direction;
         }
         return res;
     } 
